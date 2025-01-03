@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+
 #define MAX_IOCS 10
 
 struct IOC {
@@ -7,16 +9,21 @@ struct IOC {
 };
 
 void addIOC(struct IOC iocs[MAX_IOCS], int *iocCount) {
-    printf("Enter the IOC type: ");
+    printf("Enter the type of IOC (IP/Hash/Domain): ");
     fgets(iocs[*iocCount].type, 20, stdin);
-    printf("Enter the IOC value: ");
+    strtok(iocs[*iocCount].type, "\n");
+
+    printf("Enter the value of the IOC: ");
     fgets(iocs[*iocCount].value, 50, stdin);
+    strtok(iocs[*iocCount].value, "\n");
+
     (*iocCount)++;
 }
 
 void displayIOCs(struct IOC iocs[MAX_IOCS], int iocCount) {
+    printf("List of IOCs:\n");
     for (int i = 0; i < iocCount; i++) {
-        printf("%s: %s\n", iocs[i].type, iocs[i].value);
+        printf("%d. Type: %s, Value: %s\n", i + 1, iocs[i].type, iocs[i].value);
     }
 }
 
@@ -32,10 +39,22 @@ int main() {
         scanf("%d", &choice);
         getchar();
 
-        if (choice == 1) {
-            addIOC(iocs, &iocCount);
-        } else if (choice == 2) {
-            displayIOCs(iocs, iocCount);
+        switch (choice) {
+            case 1:
+                if (iocCount < MAX_IOCS) {
+                    addIOC(iocs, &iocCount);
+                } else {
+                    printf("IOC list is full!\n");
+                }
+                break;
+            case 2:
+                displayIOCs(iocs, iocCount);
+                break;
+            case 3:
+                printf("Exiting system.\n");
+                break;
+            default:
+                printf("Invalid choice. Try again.\n");
         }
     } while (choice != 3);
 
